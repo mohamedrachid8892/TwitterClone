@@ -33,7 +33,6 @@ class TwitterClient(context: Context) : OAuthBaseClient(
 
     companion object {
 
-        var lowestID : Int = 1
 
         val REST_API_INSTANCE = TwitterApi.instance()
 
@@ -62,6 +61,15 @@ class TwitterClient(context: Context) : OAuthBaseClient(
         val params = RequestParams()
         params.put("count", "25")
         params.put("since_id", 1)
+        client.get(apiUrl, params, handler)
+    }
+
+    fun getNextPageOfTweets(handler: JsonHttpResponseHandler, maxId: Long) {
+        val apiUrl =
+            getApiUrl("statuses/home_timeline.json")
+        val params = RequestParams()
+        params.put("count", "25")
+        params.put("max_id", maxId)
         client.get(apiUrl, params, handler)
     }
 

@@ -60,7 +60,8 @@ class TimelineActivity : AppCompatActivity() {
             override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView?) {
                 // Triggered only when new data needs to be appended to the list
                 // Add whatever code is needed to append new items to the bottom of the list
-                loadMoreTweets()
+                val maxId = tweets.get(tweets.size - 1).id
+                loadMoreTweets(maxId)
             }
         }
 
@@ -71,8 +72,8 @@ class TimelineActivity : AppCompatActivity() {
 
     }
 
-    fun loadMoreTweets() {
-        client.getHomeTimeline(object : JsonHttpResponseHandler() {
+    fun loadMoreTweets(maxId: Long) {
+        client.getNextPageOfTweets(object : JsonHttpResponseHandler() {
             override fun onSuccess(statusCode: Int, headers: Headers, json: JSON) {
                 Log.i(TAG, "loadMoreTweets onSuccess!")
 
@@ -90,7 +91,7 @@ class TimelineActivity : AppCompatActivity() {
             override fun onFailure(statusCode: Int, headers: Headers?, response: String?, throwable: Throwable?) {
                 Log.i(TAG, "onFailure in function loadMoreTweets $statusCode")
             }
-        })
+        },maxId)
     }
 
     fun populateHomeTimeline() {
