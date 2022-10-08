@@ -5,6 +5,7 @@ import com.codepath.asynchttpclient.RequestParams
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler
 import com.codepath.oauth.OAuthBaseClient
 import com.github.scribejava.apis.TwitterApi
+import kotlin.properties.Delegates
 
 /*
  *
@@ -19,6 +20,7 @@ import com.github.scribejava.apis.TwitterApi
  *
  */
 class TwitterClient(context: Context) : OAuthBaseClient(
+
     context, REST_API_INSTANCE, REST_URL, REST_CONSUMER_KEY, REST_CONSUMER_SECRET,
     null, String.format(
         REST_CALLBACK_URL_TEMPLATE,
@@ -30,6 +32,9 @@ class TwitterClient(context: Context) : OAuthBaseClient(
 ) {
 
     companion object {
+
+        var lowestID : Int = 1
+
         val REST_API_INSTANCE = TwitterApi.instance()
 
         const val REST_URL = "https://api.twitter.com/1.1"

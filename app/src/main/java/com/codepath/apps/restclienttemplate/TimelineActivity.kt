@@ -1,8 +1,8 @@
 package com.codepath.apps.restclienttemplate
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -22,6 +22,9 @@ class TimelineActivity : AppCompatActivity() {
     lateinit var swipeContainer: SwipeRefreshLayout
 
     val tweets = ArrayList<Tweet>()
+
+    private var scrollListener: EndlessRecyclerViewScrollListener? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,12 +50,49 @@ class TimelineActivity : AppCompatActivity() {
         rvTweets = findViewById(R.id.rvTweets)
         adapter = TweetsAdapter(tweets)
 
-        rvTweets.layoutManager = LinearLayoutManager(this)
+        // Initialize the EndlessRecyclerView
+        val linearLayoutManager: LinearLayoutManager = LinearLayoutManager(this)
+
+        rvTweets.layoutManager = linearLayoutManager
         rvTweets.adapter = adapter
 
+        scrollListener = object : EndlessRecyclerViewScrollListener(linearLayoutManager) {
+            override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView?) {
+                // Triggered only when new data needs to be appended to the list
+                // Add whatever code is needed to append new items to the bottom of the list
+                loadMoreTweets()
+            }
+        }
+
+        // Adds the scroll listener to RecyclerView
+        rvTweets.addOnScrollListener(scrollListener as EndlessRecyclerViewScrollListener)
+
         populateHomeTimeline()
+
     }
-    
+
+    fun loadMoreTweets() {
+        client.getHomeTimeline(object : JsonHttpResponseHandler() {
+            override fun onSuccess(statusCode: Int, headers: Headers, json: JSON) {
+                Log.i(TAG, "loadMoreTweets onSuccess!")
+
+                val jsonArray = json.jsonArray
+
+                try {
+                    val listOfNewTweetsRetrieved = Tweet.fromJsonArray(jsonArray)
+                    tweets.addAll(listOfNewTweetsRetrieved)
+                    adapter.notifyDataSetChanged()
+                } catch (e: JSONException) {
+                    Log.e(TAG, "JSON Exception $e")
+                }
+            }
+
+            override fun onFailure(statusCode: Int, headers: Headers?, response: String?, throwable: Throwable?) {
+                Log.i(TAG, "onFailure in function loadMoreTweets $statusCode")
+            }
+        })
+    }
+
     fun populateHomeTimeline() {
         client.getHomeTimeline(object : JsonHttpResponseHandler() {
             
