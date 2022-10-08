@@ -108,6 +108,7 @@ class TimelineActivity : AppCompatActivity() {
                     val listOfNewTweetsRetrieved = Tweet.fromJsonArray(jsonArray)
                     tweets.addAll(listOfNewTweetsRetrieved)
                     adapter.notifyDataSetChanged()
+                    scrollListener?.resetState()
                     // Now we call setRefreshing(false) to signal refresh has finished
                     swipeContainer.setRefreshing(false)
                 } catch (e: JSONException) {
