@@ -40,6 +40,14 @@
                     android:scheme="@string/intent_scheme" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".DetailTweet"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+
     </application>
 
 </manifest>

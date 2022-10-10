@@ -2,6 +2,7 @@ package com.codepath.apps.restclienttemplate
 
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -10,6 +11,7 @@ import com.codepath.apps.restclienttemplate.models.Tweet
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler
 import okhttp3.Headers
 import org.json.JSONException
+import androidx.appcompat.widget.Toolbar
 
 class TimelineActivity : AppCompatActivity() {
 
@@ -48,7 +50,7 @@ class TimelineActivity : AppCompatActivity() {
 
         // Initialize the RecyclerView for the Timeline Activity
         rvTweets = findViewById(R.id.rvTweets)
-        adapter = TweetsAdapter(tweets)
+        adapter = TweetsAdapter(this, tweets)
 
         // Initialize the EndlessRecyclerView
         val linearLayoutManager: LinearLayoutManager = LinearLayoutManager(this)
