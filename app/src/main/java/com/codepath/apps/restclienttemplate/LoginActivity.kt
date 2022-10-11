@@ -17,10 +17,6 @@ class LoginActivity : OAuthLoginActionBarActivity<TwitterClient>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-        val sampleModel = SampleModel()
-        sampleModel.name = "CodePath"
-        sampleModelDao = (applicationContext as TwitterApplication).myDatabase?.sampleModelDao()
-        AsyncTask.execute { sampleModelDao?.insertModel(sampleModel) }
     }
 
 
